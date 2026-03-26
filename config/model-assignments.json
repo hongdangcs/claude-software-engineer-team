@@ -1,0 +1,42 @@
+{
+  "version": "1.0",
+  "assignments": {
+    "orchestrator": {
+      "model": "claude-opus-4-6",
+      "rationale": "Surveys the full board and makes dispatch decisions — needs strongest reasoning"
+    },
+    "requirements-analyst": {
+      "model": "claude-opus-4-6",
+      "rationale": "Resolves ambiguity and structures requirements — needs deep reasoning"
+    },
+    "ticket-creator": {
+      "model": "claude-sonnet-4-6",
+      "rationale": "Structured decomposition of requirements into tickets — well-defined task"
+    },
+    "software-engineer": {
+      "model": "claude-sonnet-4-6",
+      "rationale": "Default implementation model; overridden per-ticket by complexity field",
+      "overrides": {
+        "complexity_high": "claude-opus-4-6",
+        "complexity_low": "claude-haiku-4-5"
+      }
+    },
+    "code-reviewer": {
+      "model": "claude-sonnet-4-6",
+      "rationale": "Code quality, security, and acceptance criteria review"
+    },
+    "qa-engineer": {
+      "model": "claude-haiku-4-5",
+      "rationale": "Test writing is formulaic once ticket context is provided — cheapest suitable model"
+    },
+    "release-manager": {
+      "model": "claude-sonnet-4-6",
+      "rationale": "Integration verification and merge ordering — moderate reasoning required"
+    }
+  },
+  "parallelism": {
+    "max_concurrent_engineers": 3,
+    "max_concurrent_reviewers": 5,
+    "max_concurrent_qa": 5
+  }
+}

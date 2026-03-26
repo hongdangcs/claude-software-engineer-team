@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LANA Board — lt-analysis</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0d1117;
+    color: #e6edf3;
+    min-height: 100vh;
+  }
+
+  header {
+    padding: 16px 24px;
+    background: #161b22;
+    border-bottom: 1px solid #30363d;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  header h1 { font-size: 18px; font-weight: 600; }
+  header .subtitle { font-size: 13px; color: #8b949e; }
+  header .badge {
+    margin-left: auto;
+    font-size: 12px;
+    color: #8b949e;
+    background: #21262d;
+    border: 1px solid #30363d;
+    padding: 3px 10px;
+    border-radius: 12px;
+  }
+  .updated { font-size: 11px; color: #6e7681; margin-left: 8px; }
+
+  .board {
+    display: flex;
+    gap: 12px;
+    padding: 20px 24px;
+    overflow-x: auto;
+    min-height: calc(100vh - 61px);
+    align-items: flex-start;
+  }
+
+  .column {
+    flex-shrink: 0;
+    width: 220px;
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .column.gate {
+    border-color: #f0883e55;
+  }
+  .column.active-stage {
+    border-color: #388bfd55;
+  }
+  .column.complete {
+    border-color: #3fb95055;
+  }
+
+  .col-header {
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #30363d;
+  }
+  .col-header .col-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+  .col-header .col-count {
+    margin-left: auto;
+    font-size: 11px;
+    background: #21262d;
+    border: 1px solid #30363d;
+    padding: 1px 7px;
+    border-radius: 10px;
+    color: #8b949e;
+  }
+  .col-header .gate-badge {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: #f0883e22;
+    color: #f0883e;
+    border: 1px solid #f0883e44;
+    font-weight: 600;
+  }
+
+  /* column accent colours */
+  .col-pending_review .col-header { background: #f0883e0d; }
+  .col-pending_review .col-title { color: #f0883e; }
+  .col-ready .col-header { background: #1f6feb1a; }
+  .col-ready .col-title { color: #58a6ff; }
+  .col-in_progress .col-header { background: #a371f71a; }
+  .col-in_progress .col-title { color: #bc8cff; }
+  .col-in_code_review .col-header { background: #79c0ff1a; }
+  .col-in_code_review .col-title { color: #79c0ff; }
+  .col-in_testing .col-header { background: #56d3641a; }
+  .col-in_testing .col-title { color: #56d364; }
+  .col-pending_uat .col-header { background: #f0883e0d; }
+  .col-pending_uat .col-title { color: #f0883e; }
+  .col-uat_approved .col-header { background: #3fb9501a; }
+  .col-uat_approved .col-title { color: #3fb950; }
+  .col-done .col-header { background: #3fb9501a; }
+  .col-done .col-title { color: #3fb950; }
+
+  .col-cards { padding: 10px 10px; display: flex; flex-direction: column; gap: 8px; min-height: 40px; }
+
+  .card {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 10px 12px;
+    cursor: default;
+    transition: border-color 0.15s;
+  }
+  .card:hover { border-color: #58a6ff66; }
+
+  .card-key {
+    font-size: 11px;
+    font-weight: 600;
+    color: #58a6ff;
+    margin-bottom: 5px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+  .card-key a { color: inherit; text-decoration: none; }
+  .card-key a:hover { text-decoration: underline; }
+
+  .card-title {
+    font-size: 12px;
+    line-height: 1.45;
+    color: #c9d1d9;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 8px;
+  }
+  .complexity {
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+    border: 1px solid;
+  }
+  .complexity-high   { color: #ff7b72; background: #ff7b7211; border-color: #ff7b7233; }
+  .complexity-medium { color: #d29922; background: #d2992211; border-color: #d2992233; }
+  .complexity-low    { color: #3fb950; background: #3fb95011; border-color: #3fb95033; }
+
+  .epic-card {
+    background: #161b22;
+    border: 1px dashed #30363d;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 11px;
+    color: #6e7681;
+    text-align: center;
+  }
+
+  .empty-col { padding: 10px; font-size: 11px; color: #3d444d; text-align: center; }
+
+  .legend {
+    display: flex;
+    gap: 16px;
+    padding: 10px 24px;
+    background: #0d1117;
+    border-top: 1px solid #21262d;
+    flex-wrap: wrap;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #8b949e; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .legend-gate { background: #f0883e; }
+  .legend-auto { background: #58a6ff; }
+  .legend-done { background: #3fb950; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>LANA — lt-analysis REST API</h1>
+    <div class="subtitle">Vietnamese Lottery Results Tracker · Go + Gin + MySQL · Jira project: LANA</div>
+  </div>
+  <div class="badge">17 tickets</div>
+  <span class="updated" id="ts"></span>
+</header>
+
+<div class="board" id="board"></div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot legend-gate"></div>Human gate (approval required)</div>
+  <div class="legend-item"><div class="legend-dot legend-auto"></div>Automated pipeline stage</div>
+  <div class="legend-item"><div class="legend-dot legend-done"></div>Complete</div>
+</div>
+
+<script>
+const JIRA_BASE = 'https://unisoft-tech.atlassian.net/browse';
+
+const TICKETS = [
+  { key:'LANA-2',  stage:'done',           complexity:'low',    title:'Project scaffolding — Go module, Gin server, MySQL connection, folder structure' },
+  { key:'LANA-3',  stage:'uat_approved',   complexity:'medium', title:'DB schema & migrations — draws table, source_conflicts table, indexes' },
+  { key:'LANA-4',  stage:'pending_uat',    complexity:'medium', title:'kqxs.vn XSMB fetcher — GET date query param, goquery HTML parsing' },
+  { key:'LANA-17', stage:'pending_uat',    complexity:'medium', title:'xosothudo.com.vn XSMB fetcher — POST form-urlencoded, goquery HTML parsing' },
+  { key:'LANA-5',  stage:'pending_review', complexity:'medium', title:'xoso.com.vn scraper — goquery HTML parsing for XSMB, XSMN, XSMT' },
+  { key:'LANA-6',  stage:'pending_review', complexity:'high',   title:'Cross-source comparison engine, source_conflicts storage, conflict resolution' },
+  { key:'LANA-7',  stage:'pending_review', complexity:'medium', title:'Daily ingestion scheduler and manual trigger endpoint — robfig/cron' },
+  { key:'LANA-8',  stage:'pending_review', complexity:'high',   title:'Historical backfill service and POST /api/v1/ingestion/backfill endpoint' },
+  { key:'LANA-9',  stage:'pending_review', complexity:'medium', title:'REST API results endpoints — GET /api/v1/results with filtering, pagination' },
+  { key:'LANA-10', stage:'pending_review', complexity:'high',   title:'REST API stats endpoints — frequency, hot-cold, distribution with in-memory cache' },
+  { key:'LANA-11', stage:'pending_review', complexity:'low',    title:'Frontend scaffolding — Vite + React 18 + Tailwind + D3 v7 + TanStack Query' },
+  { key:'LANA-12', stage:'pending_review', complexity:'medium', title:'Results browser page — results table, region tabs, date range picker' },
+  { key:'LANA-13', stage:'pending_review', complexity:'medium', title:'Filter components — DateRangePicker, RegionSelector, PrizeTierDropdown' },
+  { key:'LANA-14', stage:'pending_review', complexity:'high',   title:'D3 frequency bar chart and trend line chart components for stats page' },
+  { key:'LANA-15', stage:'pending_review', complexity:'high',   title:'D3 heatmap component — 10×10 grid, color legend, hover tooltip' },
+  { key:'LANA-16', stage:'pending_review', complexity:'medium', title:'Conflicts admin page — side-by-side source discrepancy viewer at /conflicts' },
+];
+
+const COLUMNS = [
+  { id:'pending_review', label:'Pending Review',  gate:'Gate 2', type:'gate' },
+  { id:'ready',          label:'Ready',            gate:null,     type:'active' },
+  { id:'in_progress',    label:'In Progress',      gate:null,     type:'active' },
+  { id:'in_code_review', label:'Code Review',      gate:null,     type:'active' },
+  { id:'in_testing',     label:'Testing',          gate:null,     type:'active' },
+  { id:'pending_uat',    label:'Pending UAT',      gate:'Gate 3', type:'gate' },
+  { id:'uat_approved',   label:'UAT Approved',     gate:null,     type:'complete' },
+  { id:'done',           label:'Done',             gate:null,     type:'complete' },
+];
+
+function complexityBadge(c) {
+  if (!c) return '';
+  return `<span class="complexity complexity-${c}">${c}</span>`;
+}
+
+function renderCard(t) {
+  return `
+    <div class="card">
+      <div class="card-key"><a href="${JIRA_BASE}/${t.key}" target="_blank">${t.key}</a></div>
+      <div class="card-title">${t.title}</div>
+      <div class="card-footer">${complexityBadge(t.complexity)}</div>
+    </div>`;
+}
+
+const board = document.getElementById('board');
+COLUMNS.forEach(col => {
+  const cards = TICKETS.filter(t => t.stage === col.id);
+  const typeClass = col.type === 'gate' ? 'gate' : col.type === 'complete' ? 'complete' : 'active-stage';
+  const gateHtml = col.gate ? `<span class="gate-badge">${col.gate}</span>` : '';
+  const cardsHtml = cards.length
+    ? cards.map(renderCard).join('')
+    : `<div class="empty-col">—</div>`;
+
+  board.innerHTML += `
+    <div class="column ${typeClass} col-${col.id}">
+      <div class="col-header">
+        <span class="col-title">${col.label}</span>
+        ${gateHtml}
+        <span class="col-count">${cards.length}</span>
+      </div>
+      <div class="col-cards">${cardsHtml}</div>
+    </div>`;
+});
+
+// Epic anchor note
+const doneCol = board.querySelector('.col-done .col-cards');
+if (doneCol) {
+  doneCol.insertAdjacentHTML('beforeend', `
+    <div class="epic-card">LANA-1<br>Epic anchor<br>(requirements approved)</div>`);
+}
+
+document.getElementById('ts').textContent = 'Snapshot: ' + new Date().toLocaleString('en-GB', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+</script>
+</body>
+</html>

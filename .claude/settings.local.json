@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__claude_ai_Atlassian__searchJiraIssuesUsingJql",
+      "Bash(claude --version)",
+      "Bash(pkill -f \"claude.*NJ-2\")",
+      "Bash(pkill -f \"claude.*NJ-3\")",
+      "Bash(claude -p --help)",
+      "Bash(claude -p:*)",
+      "mcp__claude_ai_Atlassian__getTransitionsForJiraIssue",
+      "mcp__claude_ai_Atlassian__addCommentToJiraIssue",
+      "mcp__claude_ai_Atlassian__transitionJiraIssue",
+      "mcp__claude_ai_Atlassian__getJiraIssue",
+      "Bash(go test:*)",
+      "Bash(go build:*)",
+      "Bash(curl -s --request GET --url \"https://api.atlassian.com/ex/jira/35782731-5d39-4620-b15d-24fb2e938845/rest/api/3/search?jql=parent%20%3D%20NJ-1&maxResults=50\" --header 'Authorization: Bearer eyJraWQiOiJmZTM2ZThkMzZjZTA1ZTczNDgxNzY5ODc5NmI1ZGNkZCIsInR5cCI6IkpXVCIsImFsZyI6IlJTMjU2In0.eyJqdGkiOiI0NjhiYzI0NS04YjZiLTRkMjgtODNjZC0yOWUzODc3MGU5NjIiLCJzdWIiOiI2MTdkMWUyYzRmMmFhNjAwNjk4MDRjMDMiLCJuYmYiOjE3NTI5OTcwNDIsImlzcyI6Imh0dHBzOi8vb2F1dGgtMi1hdXRob3JpemF0aW9uLXNlcnZlci5zZXJ2aWNlcy5hdGxhc3NpYW4uY29tIiwiaWF0IjoxNzUyOTk3MDQyLCJleHAiOjE3NTMwMDA2NDIsImF1ZCI6IjR5cjVidm5PbFRNZEg0NFQ2Tk5LNHE5Wm5SWDVQQ1p4IiwiaHR0cHM6Ly9hdGxhc3NpYW4uY29tL3N5c3RlbUFjY291bnRFbWFpbCI6IjU3NDI3NWI4LWFmODktNGI3ZC04ZjkzLTE3MWJhOGQwOGVkM0Bjb25uZWN0LmF0bGFzc2lhbi5jb20iLCJodHRwczovL2F0bGFzc2lhbi5jb20vc3lzdGVtQWNjb3VudElkIjoiNjM3NzYwN2MyMWJiZGIyNGI5MjA5ZTU4IiwiaHR0cHM6Ly9pZC5hdGxhc3NpYW4uY29tL3VqdCI6ImFkNDZmOGM3LTIxYmQtNDJiNi1iYWYzLTcxYTc1NjI3YzkxMyIsImh0dHBzOi8vaWQuYXRsYXNzaWFuLmNvbS9hdGxfdG9rZW5fdHlwZSI6IkFDQ0VTUyIsImh0dHBzOi8vaWQuYXRsYXNzaWFuLmNvbS9zZXNzaW9uX2lkIjoiYmUyOGU3YzQtODJkOS00NTZiLTkzODQtMjc1ZGRhZmFmNDE2IiwiaHR0cHM6Ly9pZC5hdGxhc3NpYW4uY29tL3ZlcmlmaWVkIjoidHJ1ZSIsImh0dHBzOi8vaWQuYXRsYXNzaWFuLmNvbS9wcm9jZXNzUmVnaW9uIjoidXMtZWFzdC0xIiwic2NvcGUiOiJyZWFkOmppcmEtd29yayByZWFkOmppcmEtdXNlciBtYW5hZ2U6amlyYS1wcm9qZWN0IHdyaXRlOmppcmEtd29yayBtYW5hZ2U6amlyYS13ZWJob29rIG1hbmFnZTpqaXJhLWRhdGEtcHJvdmlkZXIgcmVhZDptZTpjb25mbHVlbmNlIHdyaXRlOmNvbmZsdWVuY2UtY29udGVudCBtYW5hZ2U6amlyYS1jb25maWd1cmF0aW9uIG9mZmxpbmVfYWNjZXNzIiwiaHR0cHM6Ly9pZC5hdGxhc3NpYW4uY29tL2NsaWVudF9pZCI6IjR5cjVidm5PbFRNZEg0NFQ2Tk5LNHE5Wm5SWDVQQ1p4In0.k2oqKiRgk12hfm4gLVLvN1kgJjyLqIGrHNbINW7HhEhNT2xaAxnIawjjmJMnVnKsHQKZG_WIuDBLxd23VSnNqZrCLjAuMiUPG69dsPDOmPDMCMivVCNnj0_a9EALfLqbU8cmuCnYbqXlH2m-MbGdlp5TdZiP7Fis2Wo3lGmxJ8bIRpSXz-GUd8Wd1jcDUZ2EZcOJUmGXf2kqMqfyEJVqVuOiRjBPi8KP6qj2z3K31-ERuMBBg02YJLMzxwcCWS3rGgWyCIu5fOaJb14IqxB6sA5c-f71g3lCaQG5hQpO_1_E5bGLXwfivUdQ4-AHEKGU1TnCIzVz9W_eKbJlMaRw' --header 'Accept: application/json')",
+      "Bash(python3 -m json.tool)",
+      "Bash(rm go.sum)",
+      "Bash(go mod:*)",
+      "Bash(mkdir -p /tmp/nj3-files)",
+      "Bash(cp internal/adapter/azure_fetcher/azure_fetcher.go /tmp/nj3-files/)",
+      "Bash(cp internal/adapter/azure_fetcher/azure_fetcher_test.go /tmp/nj3-files/)",
+      "Bash(cp internal/adapter/azure_fetcher/models.go /tmp/nj3-files/)",
+      "Bash(mkdir -p internal/adapter/azure_fetcher)",
+      "Bash(cp /tmp/nj3-files/azure_fetcher.go internal/adapter/azure_fetcher/)",
+      "Bash(cp /tmp/nj3-files/azure_fetcher_test.go internal/adapter/azure_fetcher/)",
+      "Bash(cp /tmp/nj3-files/models.go internal/adapter/azure_fetcher/)"
+    ],
+    "approvalRequired": false,
+    "approvalMode": "auto-approve",
+    "trustedDirectories": [
+      "/Users/unisoft/Documents/claude-team"
+    ],
+    "notes": "Full autonomous access - agent can execute all terminal and MCP operations without approval"
+  }
+}

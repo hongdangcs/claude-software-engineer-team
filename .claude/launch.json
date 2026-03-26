@@ -1,0 +1,22 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "board-viewer",
+      "command": "npx serve board -p 8080",
+      "description": "Static file server for inspecting the shared board JSON files in a browser",
+      "port": 8080
+    },
+    {
+      "name": "dev",
+      "command": "npm run dev",
+      "description": "Dev server for the project the AI team builds (default port 3000)",
+      "port": 3000
+    },
+    {
+      "name": "tsc-watch",
+      "command": "npx tsc --watch --noEmit",
+      "description": "TypeScript type-checker in watch mode (no port — compiler process only)"
+    }
+  ]
+}
